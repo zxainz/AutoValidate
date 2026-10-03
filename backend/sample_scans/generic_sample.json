@@ -1,0 +1,24 @@
+{
+  "findings": [
+    {
+      "id": "GEN-001",
+      "title": "Cross-Site Scripting (Stored)",
+      "severity": "High",
+      "cve": "CVE-2023-1234",
+      "cvss": 8.2,
+      "target": "https://app.example.com/profile/comment",
+      "description": "User comments allow raw HTML tags to be rendered in other users' browser sessions.",
+      "evidence": "Payload <img src=x onerror=alert(1)> was saved and rendered back without encoding.",
+      "solution": "Sanitize and escape all HTML input before storing and outputting."
+    },
+    {
+      "id": "GEN-002",
+      "title": "Remote Version Disclosure (Debian Apache)",
+      "severity": "Low",
+      "target": "10.0.0.5:80",
+      "description": "Server reveals Apache/2.4.38 version string.",
+      "evidence": "Server: Apache/2.4.38 (Debian-10+deb10u12)",
+      "solution": "Set ServerTokens Prod."
+    }
+  ]
+}

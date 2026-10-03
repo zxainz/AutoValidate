@@ -1,0 +1,58 @@
+{
+  "issues": [
+    {
+      "name": "SQL Injection (Error-Based)",
+      "severity": "High",
+      "confidence": "Certain",
+      "host": "api.targetapp.com",
+      "port": 443,
+      "protocol": "https",
+      "url": "https://api.targetapp.com/v1/products?category=1'",
+      "issueBackground": "SQL injection arises when user-supplied input is embedded in a SQL query without proper sanitization.",
+      "remediationBackground": "Use parameterized queries or prepared statements for all database access.",
+      "issueDetail": "The parameter 'category' was tested with a single quote payload. The server returned a database syntax error disclosing internal PostgreSQL query structure.",
+      "requestresponse": [
+        {
+          "request": "GET /v1/products?category=1' HTTP/1.1\nHost: api.targetapp.com\nUser-Agent: Burp/2024.3",
+          "response": "HTTP/1.1 500 Internal Server Error\nContent-Type: application/json\n\n{\"error\": \"syntax error at or near \\\"'\\\" at character 42 in SELECT * FROM products WHERE cat_id = '1'\"}"
+        }
+      ]
+    },
+    {
+      "name": "Path Traversal (Scanner False Positive)",
+      "severity": "High",
+      "confidence": "Tentative",
+      "host": "portal.targetapp.com",
+      "port": 443,
+      "protocol": "https",
+      "url": "https://portal.targetapp.com/download?file=../../../../etc/passwd",
+      "issueBackground": "Path traversal allows an attacker to access arbitrary files on the server.",
+      "remediationBackground": "Validate and whitelist filenames against an approved list.",
+      "issueDetail": "The file parameter was tested with dot-dot-slash sequence. The scanner observed a custom error message.",
+      "requestresponse": [
+        {
+          "request": "GET /download?file=../../../../etc/passwd HTTP/1.1\nHost: portal.targetapp.com",
+          "response": "HTTP/1.1 403 Forbidden\nServer: Cloudflare\nContent-Type: text/html\n\n<html><title>403 Forbidden - Access Denied</title><body>WAF rule triggered: Path traversal attack detected</body></html>"
+        }
+      ]
+    },
+    {
+      "name": "Cross-Site Scripting (Reflected)",
+      "severity": "Medium",
+      "confidence": "Certain",
+      "host": "targetapp.com",
+      "port": 443,
+      "protocol": "https",
+      "url": "https://targetapp.com/search?q=%3Cscript%3Ealert(document.domain)%3C/script%3E",
+      "issueBackground": "Reflected XSS occurs when an application receives data in an HTTP request and includes that data within the immediate response without proper sanitization.",
+      "remediationBackground": "Context-aware HTML entity encoding should be applied to all reflected values.",
+      "issueDetail": "The parameter 'q' was reflected directly inside the response body without HTML encoding.",
+      "requestresponse": [
+        {
+          "request": "GET /search?q=%3Cscript%3Ealert(document.domain)%3C/script%3E HTTP/1.1\nHost: targetapp.com",
+          "response": "HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n<div>Search Results for: <script>alert(document.domain)</script></div>"
+        }
+      ]
+    }
+  ]
+}

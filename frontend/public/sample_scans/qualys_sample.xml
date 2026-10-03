@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<SCAN value="QualysGuard Scanner Report">
+  <IP value="10.0.1.15">
+    <VULNS>
+      <VULN number="38341" severity="3">
+        <QID>38341</QID>
+        <TITLE>OpenSSL Multiple Vulnerabilities Detected</TITLE>
+        <SEVERITY>3</SEVERITY>
+        <PORT>443</PORT>
+        <PROTOCOL>TCP</PROTOCOL>
+        <CVE_LIST>
+          <CVE><ID>CVE-2021-3450</ID></CVE>
+        </CVE_LIST>
+        <DIAGNOSIS>The host is running a version of OpenSSL with known flaws.</DIAGNOSIS>
+        <CONSEQUENCE>An attacker could bypass certificate verification.</CONSEQUENCE>
+        <SOLUTION>Upgrade to the latest package version.</SOLUTION>
+        <RESULTS>Target Banner: OpenSSL 1.1.1f-1ubuntu2.16 (Ubuntu 20.04.5 LTS). OS backport detected.</RESULTS>
+      </VULN>
+    </VULNS>
+  </IP>
+</SCAN>

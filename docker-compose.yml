@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ZAI_API_KEY=${ZAI_API_KEY:-}
+      - ZAI_BASE_URL=${ZAI_BASE_URL:-https://api.z.ai/api/coding/paas/v4}
+      - MODEL_NAME=${MODEL_NAME:-glm-5.3}
+      - LLM_PROVIDER=${LLM_PROVIDER:-mock}
+      - DATABASE_URL=sqlite+aiosqlite:////app/backend/data/autovalidate.db
+      - SECRET_KEY=${SECRET_KEY:-default_secret_dev_key}
+    volumes:
+      - ./data:/app/backend/data
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  autovalidate-data:
